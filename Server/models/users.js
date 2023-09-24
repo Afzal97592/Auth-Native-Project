@@ -44,6 +44,8 @@ const userSchema = new mongoose.Schema({
 
   otp: Number,
   otp_expiry: Date,
+  resetPasswordOTP: Number,
+  resetPasswordOtpExpire: Date,
 });
 
 userSchema.pre("save", async function (next) {
@@ -63,5 +65,7 @@ userSchema.methods.getJWTToken = function () {
     expiresIn: process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000,
   });
 };
+
+userSchema.index({ otp_expiry: 1 }, { expireAfterSeconds: 0 });
 
 export const User = mongoose.model("User", userSchema);
